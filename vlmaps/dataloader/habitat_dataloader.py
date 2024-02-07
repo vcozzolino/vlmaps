@@ -72,7 +72,7 @@ class VLMapsDataloaderHabitat:
         self.ymax = self.map.cmax
 
         self.base2cam_tf, self.base_transform = self.map.base2cam_tf, self.map.base_transform
-        self.base_poses = np.loadtxt(self.map.pose_path)
+        self.base_poses = np.loadtxt(self.map.pose_path, delimiter=",")
         self.init_base_tf = (
             self.base_transform @ cvt_pose_vec2tf(self.base_poses[0]) @ np.linalg.inv(self.base_transform)
         )

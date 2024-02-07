@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0,'/home/gpulaptop0/vlmaps')
+
 import os
 import subprocess
 from pathlib import Path
@@ -84,7 +87,7 @@ def main(config: DictConfig) -> None:
         scene_name = data_dir.name.split("_")[0]
         scene_path = Path(config.data_paths.habitat_scene_dir) / scene_name / (scene_name + ".glb")
         pose_path = data_dir / "poses.txt"
-        poses = np.loadtxt(pose_path)  # (N, 7), each line has (px, py, pz, qx, qy, qz, qw)
+        poses = np.loadtxt(pose_path, delimiter=",")  # (N, 7), each line has (px, py, pz, qx, qy, qz, qw)
         generate_scene_data(data_dir, config.data_cfg, scene_path, poses)
 
 

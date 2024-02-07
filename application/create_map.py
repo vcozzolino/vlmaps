@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0,'/home/gpulaptop0/vlmaps')
+
 from pathlib import Path
 import hydra
 from omegaconf import DictConfig

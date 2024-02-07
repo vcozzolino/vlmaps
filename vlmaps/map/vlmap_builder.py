@@ -61,7 +61,7 @@ class VLMapBuilder:
         gs = self.map_config.grid_size
         depth_sample_rate = self.map_config.depth_sample_rate
 
-        self.base_poses = np.loadtxt(self.pose_path)
+        self.base_poses = np.loadtxt(self.pose_path, delimiter=",")
         self.init_base_tf = cvt_pose_vec2tf(self.base_poses[0])
         print(self.init_base_tf)
         self.init_base_tf = (
