@@ -1,7 +1,9 @@
 import os
 import cv2
 import numpy as np
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 from vlmaps.utils.clip_utils import get_text_feats, multiple_templates
 
 
@@ -11,23 +13,20 @@ def find_similar_category_id(class_name, classes_list):
     """
     if class_name in classes_list:
         return classes_list.index(class_name)
-    import openai
-
+    from openai import OpenAI
+    
     openai_key = os.environ["OPENAI_KEY"]
-    openai.api_key = openai_key
     classes_list_str = ",".join(classes_list)
     question = f"""
     Q: What is television most relevant to among tv_monitor,plant,chair. A:tv_monitor\n
     Q: What is drawer most relevant to among tv_monitor,chest_of_drawers,chair. A:chest_of_drawers\n
     Q: What is {class_name} most relevant to among {classes_list_str}. A:"""
-    response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=question,
-        max_tokens=64,
-        temperature=0.0,
-        stop="\n",
-    )
-    result = response["choices"][0]["text"].strip()
+    response = client.completions.create(model="davinci-002",
+    prompt=question,
+    max_tokens=64,
+    temperature=0.0,
+    stop="\n")
+    result = response.choices[0].text.strip()
     print(f"Similar category of {class_name} is {result}")
     return classes_list.index(result)
 

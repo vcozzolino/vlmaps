@@ -1,5 +1,7 @@
 import os
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
 
 def parse_object_goal_instruction(language_instr):
@@ -7,10 +9,11 @@ def parse_object_goal_instruction(language_instr):
     Parse language instruction into a series of landmarks
     Example: "first go to the kitchen and then go to the toilet" -> ["kitchen", "toilet"]
     """
-    import openai
+    from openai import OpenAI
+    
+    client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
     openai_key = os.environ["OPENAI_KEY"]
-    openai.api_key = openai_key
     question = f"""
     I: go to the kitchen and then go to the toilet. A: kitchen, toilet
     I: go to the chair and then go to another chair. A: chair, chair
@@ -21,23 +24,18 @@ def parse_object_goal_instruction(language_instr):
     I: Go front left and move to the table, then turn around and find a cushion, later stand next to a column before finally navigate to any appliances. A: table, cushion, column, appliances.
     I: Move to the west of the chair, with the sofa on your right, move to the table, then turn right 90 degree, then find a table. A: chair, table
     I: {language_instr}. A:"""
-    response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=question,
-        max_tokens=64,
-        temperature=0.0,
-        stop=None,
-    )
-    result = response["choices"][0]["text"].strip()
+    response = client.completions.create(model="davinci-002", prompt=question, max_tokens=64, temperature=0.0)
+    result = response.choices[0].text.strip()
     print("landmarks: ", result)
     return [x.strip() for x in result.split(",")]
 
 
 def parse_spatial_instruction(language_instr):
-    import openai
+    from openai import OpenAI
+    
+    client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
     openai_key = os.environ["OPENAI_KEY"]
-    openai.api_key = openai_key
     # instructions_list = language_instr.split(",")
     instructions_list = [language_instr]
     results = ""
@@ -162,14 +160,8 @@ robot.move_forward(3)
 # {lang}
     """
         print("lang: ", lang)
-        response = openai.Completion.create(
-            engine="text-davinci-002",
-            prompt=question,
-            max_tokens=400,
-            temperature=0.0,
-            stop="###",
-        )
-        result = response["choices"][0]["text"].strip()
+        response = client.chat.completions.create(model="davinci-002", messages=[{"role": "user", "content": question}], max_tokens=400, temperature=0.0, stop="###")
+        result = response.choices[0].text.strip()
         if result:
             results += result + "\n"
         print(result)

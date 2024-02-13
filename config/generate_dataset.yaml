@@ -8,6 +8,6 @@ data_cfg:
   depth: true
   semantic: true
   resolution:
-    w: 512
-    h: 512
-  camera_height: 1.5
+    w: 1080
+    h: 720
+  camera_height: 1.2
