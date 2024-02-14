@@ -22,8 +22,10 @@ potential_obstacle_names:
   - "window"
   - "floor"
   - "stairs"
+  - "bed"
   - "other"
 obstacle_names:
+  - "bed"
   - "wall"
   - "chair"
   - "table"

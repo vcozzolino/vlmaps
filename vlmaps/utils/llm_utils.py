@@ -11,9 +11,6 @@ def parse_object_goal_instruction(language_instr):
     """
     from openai import OpenAI
     
-    client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
-
-    openai_key = os.environ["OPENAI_KEY"]
     question = f"""
     I: go to the kitchen and then go to the toilet. A: kitchen, toilet
     I: go to the chair and then go to another chair. A: chair, chair
@@ -33,8 +30,6 @@ def parse_object_goal_instruction(language_instr):
 def parse_spatial_instruction(language_instr):
     from openai import OpenAI
     
-    client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
-
     openai_key = os.environ["OPENAI_KEY"]
     # instructions_list = language_instr.split(",")
     instructions_list = [language_instr]

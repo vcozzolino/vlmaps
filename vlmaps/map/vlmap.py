@@ -94,7 +94,7 @@ class VLMap(Map):
 
         return True
 
-    def _init_clip(self, clip_version="ViT-B/32"):
+    def _init_clip(self, clip_version="ViT-L/14"):
         if hasattr(self, "clip_model"):
             print("clip model is already initialized")
             return

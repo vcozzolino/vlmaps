@@ -36,6 +36,7 @@ class HabitatObjectNavigationTask(HabitatTask):
         self.n_subgoals_in_task = len(self.goal_classes)
         self.curr_subgoal_id = 0
         self.finished_subgoals = []
+        self.subgoal_success_rate = 0
         self.distance_to_subgoals = []
         self.success = False
         self.actions = []
@@ -78,7 +79,6 @@ class HabitatObjectNavigationTask(HabitatTask):
         return self.curr_subgoal_id == self.n_subgoals_in_task
 
     def test_step(self, sim: habitat_sim.Simulator, action: str, agent_position: np.array = None, vis: bool = False):
-        self.actions.append(action)
         if action == "stop":
             if agent_position is None:
                 agent = sim.get_agent(0)
@@ -88,16 +88,16 @@ class HabitatObjectNavigationTask(HabitatTask):
             self.get_all_objects(sim)
             closest_object, closest_dist = self.find_closest_object_from_class(next_subgoal_name, agent_position)
             self.distance_to_subgoals.append(closest_dist)
+            print(closest_dist)
             if closest_dist < self.config.nav.valid_range:
                 self.finished_subgoals.append(self.curr_subgoal_id)
                 print(f"({self.curr_subgoal_id + 1}/{4}) {next_subgoal_name} reached! Distance: {closest_dist}m.")
-
-            self.curr_subgoal_id += 1
+                self.curr_subgoal_id += 1
         else:
             sim.step(action)
             if vis:
                 obs = sim.get_sensor_observations(0)
-                display_sample({}, obs["color_sensor"], waitkey=True)
+                display_sample({}, obs["color_sensor"], waitkey=False)
         if self.is_task_finished():
             self.n_tot_tasks += 1
             self.n_tot_subgoals += self.n_subgoals_in_task
@@ -106,7 +106,6 @@ class HabitatObjectNavigationTask(HabitatTask):
                 self.success = True
                 self.n_success_tasks += 1
             self.subgoal_success_rate = float(len(self.finished_subgoals)) / self.n_subgoals_in_task
-
     def save_single_task_metric(
         self,
         save_path: Union[Path, str],

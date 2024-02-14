@@ -25,7 +25,7 @@ class CLIPMap(Map):
         self.load_categories()
         print("a CLIPMap is created")
 
-    def _init_clip(self, clip_version="ViT-B/32"):
+    def _init_clip(self, clip_version="ViT-L/14"):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.clip_version = clip_version
         self.clip_feat_dim = {
@@ -38,7 +38,7 @@ class CLIPMap(Map):
             "ViT-B/16": 512,
             "ViT-L/14": 768,
         }[self.clip_version]
-        print("Loading CLIP model...")
+        print(f"Loading CLIP model {self.clip_version}...")
         self.clip_model, self.preprocess = clip.load(self.clip_version)  # clip.available_models()
         self.clip_model.to(self.device).eval()
 

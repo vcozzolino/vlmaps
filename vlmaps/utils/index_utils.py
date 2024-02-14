@@ -13,9 +13,7 @@ def find_similar_category_id(class_name, classes_list):
     """
     if class_name in classes_list:
         return classes_list.index(class_name)
-    from openai import OpenAI
     
-    openai_key = os.environ["OPENAI_KEY"]
     classes_list_str = ",".join(classes_list)
     question = f"""
     Q: What is television most relevant to among tv_monitor,plant,chair. A:tv_monitor\n
