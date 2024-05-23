@@ -107,7 +107,6 @@ class VLMapBuilder:
             tf = self.inv_init_base_tf @ base_pose
 
             # theta = np.arctan2(tf[1, 0], tf[0, 0])
-            # theta_deg = np.rad2deg(theta)
             # row, col, _ = base_pos2grid_id_3d(gs, cs, tf[0, 3], tf[1, 3], tf[2, 3])
             # trow, tcol, _ = base_pos2grid_id_3d(gs, cs, tf[0, 3] + tf[0, 0], tf[1, 3] + tf[1, 0], tf[2, 3])
 
@@ -149,7 +148,9 @@ class VLMapBuilder:
                 # double the grid_feat, grid_pos, weight, grid_rgb lengths
                 if max_id >= grid_feat.shape[0]:
                     print("expanding grid")
-                    grid_feat, grid_pos, weight, grid_rgb = self._reserve_map_space(grid_feat, grid_pos, weight, grid_rgb)
+                    grid_feat, grid_pos, weight, grid_rgb = self._reserve_map_space(
+                        grid_feat, grid_pos, weight, grid_rgb
+                    )
 
                 # apply the distance weighting according to
                 # ConceptFusion https://arxiv.org/pdf/2302.07241.pdf Sec. 4.1, Feature fusion

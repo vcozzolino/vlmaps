@@ -15,6 +15,13 @@ def make_cfg(settings: Dict) -> habitat_sim.Configuration:
     sim_cfg.scene_id = settings["scene"]
     sim_cfg.enable_physics = settings["enable_physics"]
 
+    if "use_default_lighting" in settings:
+        sim_cfg.override_scene_light_defaults = True
+        sim_cfg.scene_light_setup = habitat_sim.gfx.DEFAULT_LIGHTING_KEY
+
+    if "scene_dataset_config_file" in settings:
+        sim_cfg.scene_dataset_config_file = settings["scene_dataset_config_file"]
+
     sensor_spec = []
     back_rgb_sensor_spec = make_sensor_spec(
         "back_color_sensor",
@@ -135,6 +142,37 @@ def save_obs(
             save_path = save_dir / save_name
             obs = observations["semantic_sensor"]
             obs = cvt_obj_id_2_cls_id(obs, obj2cls)
+            with open(save_path, "wb") as f:
+                np.save(f, obs)
+
+
+def save_obs_replica(root_save_dir: Union[str, Path], sim_setting: Dict, observations: Dict, save_id: int) -> None:
+    """
+    save rgb, depth, or semantic images in the observation dictionary according to the sim_setting.
+    obj2cls is a dictionary mapping from object id to semantic id in habitat_sim.
+    rgb are saved as .png files of shape (width, height) in sim_setting.
+    depth are saved as .npy files where each pixel stores depth in meters.
+    semantic are saved as .npy files where each pixel stores semantic id.
+
+    """
+    root_save_dir = Path(root_save_dir)
+    if sim_setting["color_sensor"]:
+        # save rgb
+        save_name = f"{save_id:06}.png"
+        save_dir = root_save_dir / "rgb"
+        os.makedirs(save_dir, exist_ok=True)
+        save_path = save_dir / save_name
+        obs = observations["color_sensor"][:, :, [2, 1, 0]] / 255
+        cv2.imwrite(str(save_path), observations["color_sensor"][:, :, [2, 1, 0]])
+
+    if sim_setting["depth_sensor"]:
+        # save depth
+        if sim_setting["depth_sensor"]:
+            save_name = f"{save_id:06}.npy"
+            save_dir = root_save_dir / "depth"
+            os.makedirs(save_dir, exist_ok=True)
+            save_path = save_dir / save_name
+            obs = observations["depth_sensor"]
             with open(save_path, "wb") as f:
                 np.save(f, obs)
 
