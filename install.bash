@@ -7,3 +7,5 @@ cd ~
 git clone --recursive https://github.com/cvg/Hierarchical-Localization/
 cd Hierarchical-Localization/
 python -m pip install -e .
+
+conda install -c conda-forge libstdcxx-ng

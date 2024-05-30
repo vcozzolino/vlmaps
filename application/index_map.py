@@ -1,5 +1,6 @@
 import sys
-sys.path.insert(0,'/home/gpulaptop0/vlmaps')
+
+sys.path.insert(0, "/home/v00609018/vlmaps")
 
 from pathlib import Path
 import hydra
